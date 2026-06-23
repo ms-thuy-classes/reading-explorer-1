@@ -1,0 +1,27 @@
+{
+  "id": "quiz-001",
+  "title": "IELTS Reading Test 01",
+  "category": "IELTS",
+  "duration": 40,
+  "pdf": "pdf/test1.pdf",
+  "pages": [
+    {
+      "page": 1,
+      "title": "Passage 1: The History of Tea",
+      "questions": [
+        { "id": 1, "type": "mcq", "text": "Where did tea originate?", "options": ["A. China", "B. India", "C. Japan", "D. England"], "answer": "A. China" },
+        { "id": 2, "type": "tf", "text": "Tea was first used as a medicine.", "answer": "True" },
+        { "id": 3, "type": "tfng", "text": "All tea comes from the same plant.", "answer": "True" }
+      ]
+    },
+    {
+      "page": 2,
+      "title": "Passage 1 continued",
+      "questions": [
+        { "id": 4, "type": "ynng", "text": "Is green tea fermented?", "answer": "No" },
+        { "id": 5, "type": "matching", "text": "Match the tea with its description:", "matchingOptions": ["A. Oolong", "B. Black", "C. White"], "answer": "B. Black" },
+        { "id": 6, "type": "fill-blank", "text": "The most expensive tea is made from _______.", "answer": "buds" }
+      ]
+    }
+  ]
+}
