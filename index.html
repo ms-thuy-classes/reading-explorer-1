@@ -1,95 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learn with Ms. Thúy – English • IELTS • TOEIC • HSK</title>
-  <link rel="stylesheet" href="css/style.css">
-  <!-- PDF.js & Chart.js loaded only on required pages but we can include globally -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script defer src="js/main.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn with Ms. Thúy — English • IELTS • TOEIC • HSK</title>
+  <meta name="description" content="Practice English through interactive quizzes — IELTS, TOEIC, HSK and school exercises." />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar glass">
-    <div class="nav-container">
-      <a href="index.html" class="logo">📚 Ms. Thúy</a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="index.html#articles">Articles</a></li>
-        <li><a href="index.html#quizzes">Practice Tests</a></li>
-        <li><button id="darkModeToggle" class="btn-icon" aria-label="Toggle theme">🌓</button></li>
-      </ul>
-      <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-  </nav>
+<body class="light">
 
-  <!-- Hero Section -->
-  <header class="hero">
-    <div class="hero-content glass">
-      <h1>Learn with Ms. Thúy</h1>
-      <p>English • IELTS • TOEIC • HSK Practice</p>
-      <p class="hero-desc">Interactive lessons, vocabulary, grammar, and full practice tests – all in one place.</p>
-      <div class="hero-btns">
-        <a href="#articles" class="btn">Browse Articles</a>
-        <a href="#quizzes" class="btn secondary">Practice Tests</a>
+  <!-- ============ NAVBAR ============ -->
+  <header class="navbar glass" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-logo">📚</span>
+        <span class="brand-text">Learn with Ms. <span class="accent">Thúy</span></span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html" class="active">Home</a>
+        <a href="#quizzes" data-filter="IELTS">IELTS</a>
+        <a href="#quizzes" data-filter="TOEIC">TOEIC</a>
+        <a href="#quizzes" data-filter="HSK">HSK</a>
+        <a href="#quizzes" data-filter="All">All Tests</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="search-box glass" id="searchBox">
+          <input type="text" id="globalSearch" placeholder="Search quizzes..." />
+          <span class="search-icon">🔍</span>
+        </div>
+        <button class="icon-btn" id="themeToggle" title="Toggle theme">🌙</button>
+        <button class="icon-btn menu-toggle" id="menuToggle" title="Menu">☰</button>
       </div>
     </div>
   </header>
 
-  <!-- Search & Filter -->
-  <section class="search-section glass">
-    <input type="text" id="searchInput" placeholder="Search articles & quizzes..." class="search-input">
-    <select id="categoryFilter" class="filter-select">
-      <option value="all">All Categories</option>
-      <option value="IELTS">IELTS</option>
-      <option value="TOEIC">TOEIC</option>
-      <option value="HSK">HSK</option>
-      <option value="Vocabulary">Vocabulary</option>
-      <option value="Grammar">Grammar</option>
-      <option value="Reading">Reading</option>
-      <option value="Listening">Listening</option>
-      <option value="Writing">Writing</option>
-      <option value="Speaking">Speaking</option>
-      <option value="Grade 1">Grade 1</option>
-      <option value="Grade 2">Grade 2</option>
-      <option value="Grade 3">Grade 3</option>
-      <option value="Grade 4">Grade 4</option>
-      <option value="Grade 5">Grade 5</option>
-      <option value="Grade 6">Grade 6</option>
-      <option value="Grade 7">Grade 7</option>
-      <option value="Grade 8">Grade 8</option>
-      <option value="Grade 9">Grade 9</option>
-      <option value="Grade 10">Grade 10</option>
-      <option value="Grade 11">Grade 11</option>
-      <option value="Grade 12">Grade 12</option>
-    </select>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+    <div class="hero-blob blob-3"></div>
+
+    <div class="hero-card glass">
+      <span class="hero-badge">✨ Premium Practice Platform</span>
+      <h1 class="hero-title">Learn with Ms. <span class="accent">Thúy</span></h1>
+      <p class="hero-desc">
+        Practice English through interactive quizzes — IELTS, TOEIC, HSK and school exercises with instant feedback.
+      </p>
+      <div class="hero-actions">
+        <a href="#quizzes" class="btn btn-primary">Start Practicing</a>
+        <a href="#dashboard" class="btn btn-ghost">My Progress</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <strong id="statQuizzes">0</strong>
+          <span>Practice Tests</span>
+        </div>
+        <div class="stat">
+          <strong id="statQuestions">0</strong>
+          <span>Total Questions</span>
+        </div>
+        <div class="stat">
+          <strong id="statCompleted">0</strong>
+          <span>Completed</span>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Articles -->
-  <section id="articles" class="section">
-    <h2>📖 Latest Articles</h2>
-    <div id="articlesGrid" class="grid-cards"></div>
+  <!-- ============ DASHBOARD ============ -->
+  <section class="section" id="dashboard">
+    <div class="container">
+      <div class="section-head">
+        <h2>📊 Your Progress</h2>
+        <p>Track your learning journey and quiz performance</p>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-card glass">
+          <div class="dash-icon">🏆</div>
+          <div class="dash-info">
+            <span class="dash-label">Best Score</span>
+            <strong class="dash-value" id="bestScore">0%</strong>
+          </div>
+        </div>
+        <div class="dash-card glass">
+          <div class="dash-icon">📈</div>
+          <div class="dash-info">
+            <span class="dash-label">Average Score</span>
+            <strong class="dash-value" id="avgScore">0%</strong>
+          </div>
+        </div>
+        <div class="dash-card glass">
+          <div class="dash-icon">✅</div>
+          <div class="dash-info">
+            <span class="dash-label">Quizzes Completed</span>
+            <strong class="dash-value" id="completedCount">0</strong>
+          </div>
+        </div>
+        <div class="dash-card glass">
+          <div class="dash-icon">🔥</div>
+          <div class="dash-info">
+            <span class="dash-label">Streak</span>
+            <strong class="dash-value" id="streak">0 days</strong>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Quizzes -->
-  <section id="quizzes" class="section">
-    <h2>📝 Practice Tests</h2>
-    <div id="quizzesGrid" class="grid-cards"></div>
+  <!-- ============ QUIZZES ============ -->
+  <section class="section section-alt" id="quizzes">
+    <div class="container">
+      <div class="section-head">
+        <h2>🎯 Practice Tests</h2>
+        <p>IELTS, TOEIC, HSK and school English exercises</p>
+      </div>
+
+      <div class="filter-bar glass" id="quizFilterBar">
+        <button class="chip active" data-filter="All">All</button>
+        <button class="chip" data-filter="IELTS">IELTS</button>
+        <button class="chip" data-filter="TOEIC">TOEIC</button>
+        <button class="chip" data-filter="HSK">HSK</button>
+        <button class="chip" data-filter="Reading">Reading</button>
+        <button class="chip" data-filter="Listening">Listening</button>
+        <button class="chip" data-filter="Writing">Writing</button>
+        <button class="chip" data-filter="Speaking">Speaking</button>
+        <button class="chip" data-filter="Vocabulary">Vocabulary</button>
+        <button class="chip" data-filter="Grammar">Grammar</button>
+        <button class="chip" data-filter="Grade 6">Grade 6</button>
+        <button class="chip" data-filter="Grade 7">Grade 7</button>
+        <button class="chip" data-filter="Grade 8">Grade 8</button>
+        <button class="chip" data-filter="Grade 9">Grade 9</button>
+        <button class="chip" data-filter="Grade 10">Grade 10</button>
+        <button class="chip" data-filter="Grade 11">Grade 11</button>
+        <button class="chip" data-filter="Grade 12">Grade 12</button>
+      </div>
+
+      <div class="grid" id="quizzesGrid"></div>
+    </div>
   </section>
 
-  <!-- Student Dashboard -->
-  <section id="dashboard" class="section glass">
-    <h2>🏆 Your Dashboard</h2>
-    <div id="dashboardContent" class="dashboard-grid"></div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer glass">
-    <p>&copy; 2026 Ms. Thúy. All rights reserved. Built with 💖 for students.</p>
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3>📚 Learn with Ms. Thúy</h3>
+          <p>Your trusted English practice companion.<br>Interactive quizzes with instant feedback.</p>
+        </div>
+        <div>
+          <h4>Practice Tests</h4>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','IELTS')">IELTS</a>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','TOEIC')">TOEIC</a>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','HSK')">HSK</a>
+        </div>
+        <div>
+          <h4>Skills</h4>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','Reading')">Reading</a>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','Listening')">Listening</a>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','Writing')">Writing</a>
+          <a href="#quizzes" onclick="App.applyFilter('quizzesGrid','Grammar')">Grammar</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 Learn with Ms. Thúy. Made with ❤️ for students.
+      </div>
+    </div>
   </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>
