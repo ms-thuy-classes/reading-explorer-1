@@ -8,7 +8,8 @@
 
   let quiz;
   try {
-    quiz = await App.loadJSON(`data/quiz/${id}.json`);
+  const rawQuiz = await App.loadJSON(`data/quiz/${id}.json`);
+quiz = normalizeQuiz(rawQuiz);
   } catch {
     alert('Could not load quiz.');
     window.location.href = 'index.html';
@@ -17,6 +18,65 @@
 
   document.title = `${quiz.title} — Learn with Ms. Thúy`;
   document.getElementById('quizTitle').textContent = quiz.title;
+   /* ============================================================
+   NORMALIZE: Hỗ trợ cả 2 cấu trúc JSON
+   - Cấu trúc cũ: quiz.questions = [...]
+   - Cấu trúc mới: quiz.pages = [{ page, title, questions: [...] }, ...]
+   ============================================================ */
+function normalizeQuiz(raw) {
+  let questions = [];
+
+  if (Array.isArray(raw.questions)) {
+    // Cấu trúc cũ (phẳng)
+    questions = raw.questions;
+  } else if (Array.isArray(raw.pages)) {
+    // Cấu trúc mới (phân trang)
+    raw.pages.forEach(page => {
+      (page.questions || []).forEach(q => {
+        questions.push({
+          ...q,
+          _page: page.page,
+          _pageTitle: page.title
+        });
+      });
+    });
+  }
+
+  // Chuẩn hóa type (alias)
+  questions = questions.map(q => ({
+    ...q,
+    type: normalizeType(q.type)
+  }));
+
+  return { ...raw, questions };
+}
+
+function normalizeType(type) {
+  const t = String(type || '').toLowerCase().replace(/[-\s]/g, '_');
+  const map = {
+    'mcq': 'mcq',
+    'multiple_choice': 'mcq',
+    'true_false': 'true_false',
+    'truefalse': 'true_false',
+    'tf': 'true_false',
+    'true_false_not_given': 'true_false_not_given',
+    'truefalse_not_given': 'true_false_not_given',
+    'tfng': 'true_false_not_given',
+    'yes_no_not_given': 'yes_no_not_given',
+    'yesno_not_given': 'yes_no_not_given',
+    'ynng': 'yes_no_not_given',
+    'matching': 'matching',
+    'match': 'matching',
+    'fill_blank': 'fill_blank',
+    'fillblank': 'fill_blank',
+    'fill': 'fill_blank',
+    'sentence_completion': 'sentence_completion',
+    'sentence': 'sentence_completion',
+    'short_answer': 'short_answer',
+    'short': 'short_answer'
+  };
+  return map[t] || 'fill_blank';
+}
 
   // ---------- State ----------
   const state = {
@@ -145,42 +205,61 @@ async function renderPage() {
     list.addEventListener('input', handleAnswerChange);
   }
 
-  function buildQuestionHTML(q, i) {
-    const type = (q.type || 'mcq').toLowerCase();
-    let inner = `
-      <div class="question-num">Question ${i + 1}</div>
-      <div class="question-text">${App.escapeHtml(q.text || '')}</div>
-    `;
+ function buildQuestionHTML(q, i) {
+  const type = q.type;
+  let inner = `
+    <div class="question-num">Question ${i + 1}${q._page ? ` <small style="color:var(--text-soft)">(Trang ${q._page})</small>` : ''}</div>
+    <div class="question-text">${App.escapeHtml(q.text || '')}</div>
+  `;
 
-    if (type === 'mcq') {
+  // ---------- MCQ ----------
+  if (type === 'mcq') {
+    inner += `<div class="options">` +
+      (q.options || []).map(opt => `
+        <label class="option">
+          <input type="radio" name="q${i}" value="${App.escapeHtml(opt)}">
+          <span>${App.escapeHtml(opt)}</span>
+        </label>`).join('') + `</div>`;
+  }
+
+  // ---------- True/False ----------
+  else if (type === 'true_false') {
+    inner += `<div class="options">
+      <label class="option"><input type="radio" name="q${i}" value="True"><span>True</span></label>
+      <label class="option"><input type="radio" name="q${i}" value="False"><span>False</span></label>
+    </div>`;
+  }
+
+  // ---------- True/False/Not Given ----------
+  else if (type === 'true_false_not_given') {
+    inner += `<div class="options">
+      <label class="option"><input type="radio" name="q${i}" value="True"><span>True</span></label>
+      <label class="option"><input type="radio" name="q${i}" value="False"><span>False</span></label>
+      <label class="option"><input type="radio" name="q${i}" value="Not Given"><span>Not Given</span></label>
+    </div>`;
+  }
+
+  // ---------- Yes/No/Not Given ----------
+  else if (type === 'yes_no_not_given') {
+    inner += `<div class="options">
+      <label class="option"><input type="radio" name="q${i}" value="Yes"><span>Yes</span></label>
+      <label class="option"><input type="radio" name="q${i}" value="No"><span>No</span></label>
+      <label class="option"><input type="radio" name="q${i}" value="Not Given"><span>Not Given</span></label>
+    </div>`;
+  }
+
+  // ---------- Matching (dạng mới: 1 câu = 1 text, chọn từ matchingOptions) ----------
+  else if (type === 'matching') {
+    if (Array.isArray(q.matchingOptions)) {
+      // Dạng mới: mỗi câu là 1 text, chọn 1 đáp án từ matchingOptions
       inner += `<div class="options">` +
-        (q.options || []).map((opt, j) => `
+        q.matchingOptions.map(opt => `
           <label class="option">
             <input type="radio" name="q${i}" value="${App.escapeHtml(opt)}">
             <span>${App.escapeHtml(opt)}</span>
           </label>`).join('') + `</div>`;
-    }
-    else if (['truefalse', 'true_false'].includes(type)) {
-      inner += `<div class="options">
-        <label class="option"><input type="radio" name="q${i}" value="True"><span>True</span></label>
-        <label class="option"><input type="radio" name="q${i}" value="False"><span>False</span></label>
-      </div>`;
-    }
-    else if (['tfng', 'true_false_not_given'].includes(type)) {
-      inner += `<div class="options">
-        <label class="option"><input type="radio" name="q${i}" value="True"><span>True</span></label>
-        <label class="option"><input type="radio" name="q${i}" value="False"><span>False</span></label>
-        <label class="option"><input type="radio" name="q${i}" value="Not Given"><span>Not Given</span></label>
-      </div>`;
-    }
-    else if (['ynng', 'yes_no_not_given'].includes(type)) {
-      inner += `<div class="options">
-        <label class="option"><input type="radio" name="q${i}" value="Yes"><span>Yes</span></label>
-        <label class="option"><input type="radio" name="q${i}" value="No"><span>No</span></label>
-        <label class="option"><input type="radio" name="q${i}" value="Not Given"><span>Not Given</span></label>
-      </div>`;
-    }
-    else if (type === 'matching') {
+    } else {
+      // Dạng cũ: left + right
       const left = q.left || [];
       const right = q.right || [];
       inner += `<div class="matching-grid">` +
@@ -191,16 +270,21 @@ async function renderPage() {
             ${right.map(r => `<option value="${App.escapeHtml(r)}">${App.escapeHtml(r)}</option>`).join('')}
           </select>`).join('') + `</div>`;
     }
-    else if (['fill', 'fillblank', 'fill_blank', 'sentence', 'short'].includes(type)) {
-      inner += `<input type="text" class="question-input" placeholder="Your answer..." data-input="${i}">`;
-    }
-    else {
-      inner += `<input type="text" class="question-input" placeholder="Your answer..." data-input="${i}">`;
-    }
-
-    inner += `<div class="feedback" data-feedback="${i}"></div>`;
-    return inner;
   }
+
+  // ---------- Fill blank / Sentence / Short answer ----------
+  else if (['fill_blank', 'sentence_completion', 'short_answer'].includes(type)) {
+    inner += `<input type="text" class="question-input" placeholder="Your answer..." data-input="${i}">`;
+  }
+
+  // ---------- Default ----------
+  else {
+    inner += `<input type="text" class="question-input" placeholder="Your answer..." data-input="${i}">`;
+  }
+
+  inner += `<div class="feedback" data-feedback="${i}"></div>`;
+  return inner;
+}
 
   function handleAnswerChange(e) {
     const block = e.target.closest('.question-block');
