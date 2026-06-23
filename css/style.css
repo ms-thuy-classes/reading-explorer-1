@@ -863,3 +863,80 @@ body.dark .card-badge-new {
   background: rgba(255, 140, 66, 0.2);
   color: #FFA862;
 }
+/* ============ RESIZABLE DIVIDER ============ */
+.quiz-layout {
+  /* 👇 Chuyển sang dùng inline style khi resize, nhưng giữ default */
+  grid-template-columns: 70% 8px calc(30% - 8px);
+  transition: grid-template-columns 0.15s ease;
+}
+.quiz-layout.is-resizing {
+  transition: none; /* tắt transition khi đang kéo cho mượt */
+  user-select: none;
+}
+
+.divider {
+  position: relative;
+  background: var(--border);
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s, box-shadow 0.2s;
+  z-index: 10;
+  touch-action: none; /* tránh scroll khi kéo trên mobile */
+}
+.divider:hover,
+.divider.dragging {
+  background: var(--primary);
+  box-shadow: 0 0 0 2px rgba(255, 140, 66, 0.2);
+}
+.divider-handle {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 0;
+  pointer-events: none;
+}
+.divider-handle span {
+  display: block;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--text-soft);
+  transition: background 0.2s;
+}
+.divider:hover .divider-handle span,
+.divider.dragging .divider-handle span {
+  background: white;
+}
+
+/* Vùng bắt sự kiện rộng hơn để dễ kéo */
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -8px; right: -8px;
+  /* Mở rộng vùng bắt sự kiện */
+}
+
+/* Khi đang kéo: ẩn con trỏ text, disable selection toàn trang */
+body.is-resizing,
+body.is-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+/* Mobile: ẩn divider, stack dọc */
+@media (max-width: 900px) {
+  .quiz-layout {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto;
+  }
+  .divider {
+    display: none;
+  }
+  .pdf-pane {
+    max-height: 50vh;
+  }
+}
