@@ -89,45 +89,77 @@
     </div>
   </aside>
 </main>
+<!-- RESULTS MODAL -->
+<div class="modal" id="resultModal">
+  <div class="modal-content modal-white">
+    <button class="modal-close" id="modalClose">✕</button>
 
-  <!-- RESULTS MODAL -->
-  <div class="modal" id="resultModal">
-    <div class="modal-content glass">
-      <button class="modal-close" id="modalClose">✕</button>
-      <h2>🎉 Quiz Results</h2>
-      <div class="result-summary">
-        <div class="result-score">
-          <div class="score-circle" id="scoreCircle">
-            <strong id="scorePercent">0%</strong>
-            <small>Score</small>
-          </div>
+    <div class="result-header">
+      <h2>📋 Kết Quả Bài Làm</h2>
+      <p class="result-subtitle" id="resultQuizTitle"></p>
+    </div>
+
+    <!-- SCORE SUMMARY -->
+    <div class="result-summary-box">
+      <div class="score-big">
+        <strong id="scorePercent">0%</strong>
+        <small>Điểm</small>
+      </div>
+      <div class="score-details">
+        <div class="stat-row">
+          <span>📝 Tổng số câu:</span>
+          <strong id="totalCount">0</strong>
         </div>
-        <div class="result-stats">
-          <div class="stat-row"><span>Correct:</span><strong id="correctCount">0</strong></div>
-          <div class="stat-row"><span>Incorrect:</span><strong id="incorrectCount">0</strong></div>
-          <div class="stat-row"><span>Unanswered:</span><strong id="unansweredCount">0</strong></div>
-          <div class="stat-row"><span>10-point scale:</span><strong id="tenScale">0</strong></div>
-          <div class="stat-row"><span>Time:</span><strong id="timeTaken">00:00</strong></div>
+        <div class="stat-row correct-row">
+          <span>✅ Đúng:</span>
+          <strong id="correctCount">0</strong>
+        </div>
+        <div class="stat-row incorrect-row">
+          <span>❌ Sai:</span>
+          <strong id="incorrectCount">0</strong>
+        </div>
+        <div class="stat-row neutral-row">
+          <span>⚪ Bỏ trống:</span>
+          <strong id="unansweredCount">0</strong>
+        </div>
+        <div class="stat-row">
+          <span>📊 Thang điểm 10:</span>
+          <strong id="tenScale">0</strong>
+        </div>
+        <div class="stat-row">
+          <span>⏱ Thời gian làm bài:</span>
+          <strong id="timeTaken">00:00</strong>
         </div>
       </div>
-      <div class="chart-wrap">
-        <canvas id="resultChart" width="260" height="260"></canvas>
-      </div>
+    </div>
 
-      <div class="wrong-table-wrap">
-        <h3>❌ Wrong Answers</h3>
-        <table class="wrong-table" id="wrongTable">
-          <thead><tr><th>#</th><th>Your Answer</th><th>Correct</th></tr></thead>
+    <!-- REVIEW TABLE -->
+    <div class="review-section">
+      <h3>📖 Chi Tiết Từng Câu</h3>
+      <div class="review-table-wrap">
+        <table class="review-table" id="reviewTable">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th>Câu hỏi</th>
+              <th style="width:140px">Đáp án của bạn</th>
+              <th style="width:140px">Đáp án đúng</th>
+              <th style="width:70px">Kết quả</th>
+              <th>Giải thích</th>
+            </tr>
+          </thead>
           <tbody></tbody>
         </table>
       </div>
+    </div>
 
-      <div class="result-actions">
-        <button class="btn btn-ghost" id="reviewBtn">📖 Review</button>
-        <button class="btn btn-primary" id="retryBtn">🔁 Retry</button>
-      </div>
+    <!-- ACTIONS -->
+    <div class="result-actions">
+      <button class="btn btn-ghost" id="reviewBtn">🔍 Xem lại trên bài</button>
+      <button class="btn btn-primary" id="retryBtn">🔁 Làm lại</button>
     </div>
   </div>
+</div>
 
   <script src="js/app.js"></script>
   <script src="js/quiz.js"></script>
