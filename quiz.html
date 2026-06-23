@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Test – Ms. Thúy</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <nav class="navbar glass">
+    <div class="nav-container">
+      <a href="index.html" class="logo">📚 Ms. Thúy</a>
+      <a href="index.html" class="btn-small secondary">← Back to Home</a>
+    </div>
+  </nav>
+
+  <main class="quiz-page">
+    <!-- Quiz controls -->
+    <div id="quizControls" class="glass" style="display:none;">
+      <div class="quiz-info">
+        <h2 id="quizTitle"></h2>
+        <div>
+          <button id="modeToggle" class="btn small">Practice Mode</button>
+          <button id="startTimerBtn" class="btn small secondary">Start Timer</button>
+          <span id="timerDisplay" class="timer">60:00</span>
+          <button id="fullscreenBtn" class="btn small secondary">⛶ Fullscreen</button>
+          <label class="toggle-label">
+            <input type="checkbox" id="showCorrectToggle" checked> Show Answers
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main two‑column layout -->
+    <div class="quiz-main" id="quizMain" style="display:none;">
+      <div class="pdf-panel" id="pdfPanel">
+        <div class="pdf-toolbar glass">
+          <button id="zoomInBtn" class="btn small secondary">🔍+</button>
+          <span id="zoomPercent">100%</span>
+          <button id="zoomOutBtn" class="btn small secondary">🔍−</button>
+          <button id="prevPageBtn" class="btn small secondary">◀</button>
+          <span id="pageIndicator">1/0</span>
+          <button id="nextPageBtn" class="btn small secondary">▶</button>
+        </div>
+        <div id="pdfContainer" class="pdf-container"></div>
+      </div>
+      <div class="answer-panel" id="answerPanel">
+        <div class="answer-header glass">
+          <h3 id="pageTitle">Page 1</h3>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+          <div class="progress-text">
+            <span id="answeredCount">0/0</span> <span id="percentageLabel">0%</span>
+          </div>
+          <button id="submitQuizBtn" class="btn full-width">Submit Test</button>
+        </div>
+        <div id="questionsContainer"></div>
+      </div>
+    </div>
+
+    <!-- Result page (hidden initially) -->
+    <div id="resultPage" class="result-page glass" style="display:none;">
+      <h2>Test Results</h2>
+      <div id="bandScoreDisplay" class="big-score">0/10</div>
+      <p id="scoreSummary"></p>
+      <div id="statsGrid" class="stats-grid"></div>
+      <div class="pie-chart-container">
+        <canvas id="pieChart"></canvas>
+      </div>
+      <h3>Answer Review</h3>
+      <div class="filter-btns">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="incorrect">Incorrect</button>
+        <button class="filter-btn" data-filter="correct">Correct</button>
+      </div>
+      <table id="reviewTable">
+        <thead><tr><th>#</th><th>Your Answer</th><th>Correct</th><th>Result</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="result-actions">
+        <button id="retryQuizBtn" class="btn">Retry Test</button>
+        <button id="reviewAnswersBtn" class="btn secondary">Review Answers</button>
+        <button id="printResultBtn" class="btn secondary">Print Result</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
