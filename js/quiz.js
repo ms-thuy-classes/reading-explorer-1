@@ -429,4 +429,132 @@ async function renderPage() {
   renderAnswerSheet();
   startTimer();
   loadPDF();
+   /* ============================================================
+   RESIZABLE DIVIDER LOGIC
+   ============================================================ */
+(function initResizableDivider() {
+  const STORAGE_KEY = 'quiz-split-ratio';
+  const MIN_PERCENT = 25;   // tối thiểu 25%
+  const MAX_PERCENT = 85;   // tối đa 85%
+  const DEFAULT_PERCENT = 70;
+
+  const layout   = document.getElementById('quizLayout');
+  const divider  = document.getElementById('divider');
+  const pdfPane  = document.getElementById('pdfPane');
+  const ansPane  = document.getElementById('answerPane');
+  if (!layout || !divider) return;
+
+  const DIVIDER_WIDTH = 8; // px, khớp với CSS grid-template-columns
+
+  let isDragging = false;
+  let currentPercent = loadPercent();
+
+  // ---------- Apply layout ----------
+  function applyLayout(percent, animate = true) {
+    percent = Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, percent));
+    currentPercent = percent;
+
+    const left  = percent + '%';
+    const right = `calc(${100 - percent}% - ${DIVIDER_WIDTH}px)`;
+
+    if (!animate) layout.classList.add('is-resizing');
+    layout.style.gridTemplateColumns = `${left} ${DIVIDER_WIDTH}px ${right}`;
+    if (!animate) {
+      // force reflow rồi bỏ class
+      void layout.offsetWidth;
+      layout.classList.remove('is-resizing');
+    }
+  }
+
+  function loadPercent() {
+    try {
+      const saved = parseFloat(localStorage.getItem(STORAGE_KEY));
+      if (!isNaN(saved) && saved >= MIN_PERCENT && saved <= MAX_PERCENT) return saved;
+    } catch {}
+    return DEFAULT_PERCENT;
+  }
+
+  function savePercent() {
+    try { localStorage.setItem(STORAGE_KEY, String(currentPercent)); } catch {}
+  }
+
+  // ---------- Mouse events ----------
+  function onPointerDown(e) {
+    e.preventDefault();
+    isDragging = true;
+    divider.classList.add('dragging');
+    document.body.classList.add('is-resizing');
+    document.addEventListener('mousemove', onPointerMove);
+    document.addEventListener('mouseup', onPointerUp);
+    document.addEventListener('touchmove', onPointerMove, { passive: false });
+    document.addEventListener('touchend', onPointerUp);
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const rect = layout.getBoundingClientRect();
+    const offsetX = clientX - rect.left;
+    const percent = (offsetX / rect.width) * 100;
+
+    applyLayout(percent, false);
+  }
+
+  function onPointerUp() {
+    if (!isDragging) return;
+    isDragging = false;
+    divider.classList.remove('dragging');
+    document.body.classList.remove('is-resizing');
+    document.removeEventListener('mousemove', onPointerMove);
+    document.removeEventListener('mouseup', onPointerUp);
+    document.removeEventListener('touchmove', onPointerMove);
+    document.removeEventListener('touchend', onPointerUp);
+
+    savePercent();
+
+    // Re-render PDF sau khi resize để sắc nét
+    if (typeof renderPage === 'function') {
+      setTimeout(renderPage, 50);
+    }
+  }
+
+  // ---------- Double-click: reset ----------
+  divider.addEventListener('dblclick', () => {
+    applyLayout(DEFAULT_PERCENT, true);
+    savePercent();
+    if (typeof renderPage === 'function') {
+      setTimeout(renderPage, 50);
+    }
+  });
+
+  // ---------- Keyboard: arrow keys khi divider focus ----------
+  divider.tabIndex = 0;
+  divider.setAttribute('role', 'separator');
+  divider.setAttribute('aria-orientation', 'vertical');
+  divider.addEventListener('keydown', (e) => {
+    const step = e.shiftKey ? 5 : 1;
+    if (e.key === 'ArrowLeft')  { applyLayout(currentPercent - step, true); savePercent(); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { applyLayout(currentPercent + step, true); savePercent(); e.preventDefault(); }
+    if (e.key === 'Home')       { applyLayout(MIN_PERCENT, true); savePercent(); e.preventDefault(); }
+    if (e.key === 'End')        { applyLayout(MAX_PERCENT, true); savePercent(); e.preventDefault(); }
+  });
+
+  // ---------- Attach ----------
+  divider.addEventListener('mousedown', onPointerDown);
+  divider.addEventListener('touchstart', onPointerDown, { passive: false });
+
+  // ---------- Init ----------
+  applyLayout(currentPercent, false);
+
+  // Re-render PDF khi window resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (typeof renderPage === 'function') renderPage();
+    }, 100);
+  });
+})();
 })();
