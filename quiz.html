@@ -62,26 +62,33 @@
     </div>
   </div>
 
-  <!-- QUIZ LAYOUT -->
-  <main class="quiz-layout">
-    <section class="pdf-pane" id="pdfPane">
-      <div class="pdf-container" id="pdfContainer">
-        <canvas id="pdfCanvas"></canvas>
-      </div>
-    </section>
+ <!-- QUIZ LAYOUT -->
+<main class="quiz-layout" id="quizLayout">
+  <section class="pdf-pane" id="pdfPane">
+    <div class="pdf-container" id="pdfContainer">
+      <canvas id="pdfCanvas"></canvas>
+    </div>
+  </section>
 
-    <aside class="answer-pane glass" id="answerPane">
-      <div class="answer-header">
-        <h3>Answer Sheet</h3>
-        <span id="answerProgress">0 / 0</span>
-      </div>
-      <div class="answer-list" id="answerList"></div>
-      <div class="answer-footer">
-        <button class="btn btn-ghost" id="clearBtn">Clear All</button>
-        <button class="btn btn-primary" id="submitBtn">Submit</button>
-      </div>
-    </aside>
-  </main>
+  <!-- 👇 RESIZABLE DIVIDER -->
+  <div class="divider" id="divider" title="Kéo để thay đổi kích thước • Nhấp đúp để reset">
+    <div class="divider-handle">
+      <span></span><span></span>
+    </div>
+  </div>
+
+  <aside class="answer-pane glass" id="answerPane">
+    <div class="answer-header">
+      <h3>Answer Sheet</h3>
+      <span id="answerProgress">0 / 0</span>
+    </div>
+    <div class="answer-list" id="answerList"></div>
+    <div class="answer-footer">
+      <button class="btn btn-ghost" id="clearBtn">Clear All</button>
+      <button class="btn btn-primary" id="submitBtn">Submit</button>
+    </div>
+  </aside>
+</main>
 
   <!-- RESULTS MODAL -->
   <div class="modal" id="resultModal">
