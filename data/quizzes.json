@@ -1,0 +1,18 @@
+[
+  {
+    "id": "quiz-001",
+    "title": "IELTS Reading Test 01",
+    "category": "IELTS",
+    "questions": 15,
+    "duration": 40,
+    "pdf": "pdf/test1.pdf"
+  },
+  {
+    "id": "quiz-002",
+    "title": "TOEIC Practice Test 1",
+    "category": "TOEIC",
+    "questions": 20,
+    "duration": 30,
+    "pdf": "pdf/test2.pdf"
+  }
+]
