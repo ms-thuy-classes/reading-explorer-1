@@ -3,16 +3,27 @@
     "id": "quiz-001",
     "title": "IELTS Reading Test 01",
     "category": "IELTS",
-    "questions": 15,
-    "duration": 40,
+    "thumbnail": "assets/img/ielts.jpg",
+    "questions": 5,
+    "duration": 60,
     "pdf": "pdf/test1.pdf"
   },
   {
     "id": "quiz-002",
-    "title": "TOEIC Practice Test 1",
+    "title": "TOEIC Practice Test 01",
     "category": "TOEIC",
-    "questions": 20,
-    "duration": 30,
+    "thumbnail": "assets/img/toeic.jpg",
+    "questions": 4,
+    "duration": 45,
     "pdf": "pdf/test2.pdf"
+  },
+  {
+    "id": "quiz-003",
+    "title": "HSK Level 3 Mock Test",
+    "category": "HSK",
+    "thumbnail": "assets/img/hsk.jpg",
+    "questions": 4,
+    "duration": 30,
+    "pdf": "pdf/test1.pdf"
   }
 ]
