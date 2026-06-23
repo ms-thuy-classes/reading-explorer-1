@@ -23,7 +23,7 @@
     mode: 'practice', // practice | exam
     pdfDoc: null,
     pageNum: 1,
-    scale: 1.2,
+    scale: 1.5,
     answers: {},       // { qIndex: value }
     submitted: false,
     startTime: Date.now(),
@@ -52,16 +52,43 @@
     }
   }
 
-  async function renderPage() {
-    if (!state.pdfDoc) return;
-    const page = await state.pdfDoc.getPage(state.pageNum);
-    const viewport = page.getViewport({ scale: state.scale });
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    await page.render({ canvasContext: ctx, viewport }).promise;
-    document.getElementById('pageInfo').textContent = `${state.pageNum} / ${state.pdfDoc.numPages}`;
-    document.getElementById('zoomLevel').textContent = Math.round(state.scale * 100) + '%';
-  }
+async function renderPage() {
+  if (!state.pdfDoc) return;
+
+  const page = await state.pdfDoc.getPage(state.pageNum);
+
+  // 🔑 KEY FIX: nhân scale với devicePixelRatio để sắc nét trên Retina/HiDPI
+  const dpr = window.devicePixelRatio || 1;
+  const viewport = page.getViewport({ scale: state.scale * dpr });
+
+  // Set kích thước canvas thật (lớn hơn) theo DPR
+  canvas.width = Math.floor(viewport.width);
+  canvas.height = Math.floor(viewport.height);
+
+  // Set kích thước hiển thị CSS (nhỏ hơn) = kích thước gốc
+  const displayViewport = page.getViewport({ scale: state.scale });
+  canvas.style.width = Math.floor(displayViewport.width) + 'px';
+  canvas.style.height = Math.floor(displayViewport.height) + 'px';
+
+  // Reset transform trước khi render (tránh chồng lớp khi zoom nhiều lần)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Render với background trắng để tránh trong suốt
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  await page.render({
+    canvasContext: ctx,
+    viewport: viewport,
+    intent: 'print'          // 🔑 dùng 'print' để nét hơn 'display'
+  }).promise;
+
+  // Cập nhật UI
+  document.getElementById('pageInfo').textContent =
+    `${state.pageNum} / ${state.pdfDoc.numPages}`;
+  document.getElementById('zoomLevel').textContent =
+    Math.round(state.scale * 100) + '%';
+}
 
   // ---------- Toolbar controls ----------
   document.getElementById('zoomIn').onclick = () => { state.scale = Math.min(3, state.scale + 0.2); renderPage(); };
