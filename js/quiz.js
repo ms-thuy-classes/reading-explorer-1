@@ -165,15 +165,7 @@ async function renderPage() {
     else document.exitFullscreen?.();
   };
 
-  // ---------- Mode switch ----------
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (state.submitted) return;
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      state.mode = btn.dataset.mode;
-    });
-  });
+  
 
   // ---------- Timer ----------
   function startTimer() {
@@ -286,36 +278,30 @@ async function renderPage() {
   return inner;
 }
 
-  function handleAnswerChange(e) {
-    const block = e.target.closest('.question-block');
-    if (!block) return;
-    const i = +block.dataset.index;
-    const q = quiz.questions[i];
-    const type = (q.type || 'mcq').toLowerCase();
+ function handleAnswerChange(e) {
+  const block = e.target.closest('.question-block');
+  if (!block) return;
+  const i = +block.dataset.index;
+  const q = quiz.questions[i];
+  const type = q.type;
 
-    if (type === 'matching') {
-      const selects = block.querySelectorAll('select');
-      const map = {};
-      selects.forEach(s => { if (s.value) map[s.dataset.match] = s.value; });
-      state.answers[i] = map;
-    } else if (e.target.type === 'radio') {
-      state.answers[i] = e.target.value;
-      block.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-      e.target.closest('.option').classList.add('selected');
-    } else if (e.target.classList.contains('question-input')) {
-      state.answers[i] = e.target.value.trim();
-    }
-
-    updateProgress();
-
-    if (state.mode === 'practice' && !state.submitted) {
-      // instant feedback on change (only for complete answers)
-      const val = state.answers[i];
-      if (val !== undefined && val !== '' && (typeof val !== 'object' || Object.keys(val).length === (q.left || []).length)) {
-        showFeedback(i);
-      }
-    }
+  if (type === 'matching') {
+    const selects = block.querySelectorAll('select');
+    const map = {};
+    selects.forEach(s => { if (s.value) map[s.dataset.match] = s.value; });
+    state.answers[i] = map;
+  } else if (e.target.type === 'radio') {
+    state.answers[i] = e.target.value;
+    block.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    e.target.closest('.option').classList.add('selected');
+  } else if (e.target.classList.contains('question-input')) {
+    state.answers[i] = e.target.value.trim();
   }
+
+  updateProgress();
+
+
+}
 
   function showFeedback(i) {
     const q = quiz.questions[i];
@@ -399,106 +385,135 @@ async function renderPage() {
     renderAnswerSheet();
   };
 
-  function showResults() {
-    const questions = quiz.questions || [];
-    let correct = 0, incorrect = 0, unanswered = 0;
-    const wrong = [];
+ function showResults() {
+  const questions = quiz.questions || [];
+  let correct = 0, incorrect = 0, unanswered = 0;
+  const reviewData = [];
 
-    questions.forEach((q, i) => {
-      const user = state.answers[i];
-      const hasAnswer = user !== undefined && user !== '' && user !== null &&
-        (typeof user !== 'object' || Object.keys(user).length > 0);
-      if (!hasAnswer) { unanswered++; return; }
-      if (isCorrect(q, user)) {
-        correct++;
-      } else {
-        incorrect++;
-        wrong.push({
-          num: i + 1,
-          yours: formatAnswer(user),
-          correct: formatAnswer(getCorrectAnswer(q))
-        });
-      }
+  questions.forEach((q, i) => {
+    const user = state.answers[i];
+    const hasAnswer = user !== undefined && user !== '' && user !== null &&
+      (typeof user !== 'object' || Object.keys(user).length > 0);
 
-      // show feedback on all in review
-      const block = document.querySelector(`.question-block[data-index="${i}"]`);
-      const fb = block.querySelector('[data-feedback]');
-      block.classList.remove('correct', 'incorrect');
-      fb.classList.remove('correct', 'incorrect', 'show');
-      if (isCorrect(q, user)) {
-        block.classList.add('correct');
-        fb.classList.add('correct', 'show');
-        fb.innerHTML = '✅ Correct!';
-      } else {
-        block.classList.add('incorrect');
-        fb.classList.add('incorrect', 'show');
-        fb.innerHTML = `❌ <span class="correct-answer-text">Answer: ${formatAnswer(getCorrectAnswer(q))}</span>`;
-      }
+    let status, userDisplay, correctDisplay;
 
-      // highlight options
-      if ((q.type || 'mcq').toLowerCase() !== 'matching') {
-        block.querySelectorAll('.option').forEach(o => {
-          const input = o.querySelector('input');
-          if (normalize(input.value) === normalize(getCorrectAnswer(q))) {
+    if (!hasAnswer) {
+      unanswered++;
+      status = 'unanswered';
+      userDisplay = '—';
+      correctDisplay = formatAnswer(getCorrectAnswer(q));
+    } else if (isCorrect(q, user)) {
+      correct++;
+      status = 'correct';
+      userDisplay = formatAnswer(user);
+      correctDisplay = formatAnswer(getCorrectAnswer(q));
+    } else {
+      incorrect++;
+      status = 'incorrect';
+      userDisplay = formatAnswer(user);
+      correctDisplay = formatAnswer(getCorrectAnswer(q));
+    }
+
+    reviewData.push({
+      num: i + 1,
+      text: q.text || '',
+      userAnswer: userDisplay,
+      correctAnswer: correctDisplay,
+      status: status,
+      explanation: q.explanation || ''
+    });
+
+    // Highlight trên answer sheet
+    const block = document.querySelector(`.question-block[data-index="${i}"]`);
+    if (!block) return;
+    const fb = block.querySelector('[data-feedback]');
+    block.classList.remove('correct', 'incorrect');
+    fb.classList.remove('correct', 'incorrect', 'show');
+
+    if (status === 'correct') {
+      block.classList.add('correct');
+      fb.classList.add('correct', 'show');
+      fb.innerHTML = '✅ Đúng';
+    } else if (status === 'incorrect') {
+      block.classList.add('incorrect');
+      fb.classList.add('incorrect', 'show');
+      fb.innerHTML = `❌ Đáp án đúng: <strong>${App.escapeHtml(correctDisplay)}</strong>`;
+    } else {
+      block.classList.add('incorrect');
+      fb.classList.add('incorrect', 'show');
+      fb.innerHTML = `⚪ Chưa trả lời. Đáp án: <strong>${App.escapeHtml(correctDisplay)}</strong>`;
+    }
+
+    // Highlight options
+    if (type !== 'matching' || !Array.isArray(q.matchingOptions)) {
+      block.querySelectorAll('.option').forEach(o => {
+        const input = o.querySelector('input');
+        if (!input) return;
+        const val = input.value;
+        const correctVal = getCorrectAnswer(q);
+        if (Array.isArray(correctVal)) {
+          if (correctVal.some(c => normalize(c) === normalize(val))) {
             o.classList.add('correct-answer');
-          } else if (input.checked && !isCorrect(q, user)) {
+          } else if (input.checked) {
             o.classList.add('wrong-answer');
           }
-        });
-      }
-    });
-
-    const total = questions.length;
-    const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
-    const tenScale = total > 0 ? ((correct / total) * 10).toFixed(1) : '0.0';
-    const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
-    const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
-    const s = String(elapsed % 60).padStart(2, '0');
-
-    // save to dashboard
-    App.recordQuizResult(id, correct, total);
-
-    // populate modal
-    document.getElementById('scorePercent').textContent = percent + '%';
-    document.getElementById('correctCount').textContent = correct;
-    document.getElementById('incorrectCount').textContent = incorrect;
-    document.getElementById('unansweredCount').textContent = unanswered;
-    document.getElementById('tenScale').textContent = tenScale;
-    document.getElementById('timeTaken').textContent = `${m}:${s}`;
-
-    const tbody = document.querySelector('#wrongTable tbody');
-    tbody.innerHTML = wrong.length
-      ? wrong.map(w => `<tr><td>${w.num}</td><td>${w.yours}</td><td>${w.correct}</td></tr>`).join('')
-      : `<tr><td colspan="3" style="text-align:center;color:var(--text-soft)">🎉 All correct!</td></tr>`;
-
-    // chart
-    drawChart(correct, incorrect, unanswered);
-
-    document.getElementById('resultModal').classList.add('show');
-  }
-
-  function drawChart(correct, incorrect, unanswered) {
-    const ctxC = document.getElementById('resultChart').getContext('2d');
-    if (window._chart) window._chart.destroy();
-    window._chart = new Chart(ctxC, {
-      type: 'pie',
-      data: {
-        labels: ['Correct', 'Incorrect', 'Unanswered'],
-        datasets: [{
-          data: [correct, incorrect, unanswered],
-          backgroundColor: ['#22c55e', '#ef4444', '#94a3b8'],
-          borderWidth: 2,
-          borderColor: '#fff'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).color } }
+        } else if (correctVal && normalize(val) === normalize(correctVal)) {
+          o.classList.add('correct-answer');
+        } else if (input.checked && !isCorrect(q, user)) {
+          o.classList.add('wrong-answer');
         }
-      }
-    });
-  }
+      });
+    }
+  });
+
+  const total = questions.length;
+  const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const tenScale = total > 0 ? ((correct / total) * 10).toFixed(1) : '0.0';
+  const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+  const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const s = String(elapsed % 60).padStart(2, '0');
+
+  // Lưu vào dashboard
+  App.recordQuizResult(id, correct, total);
+
+  // ---------- Điền vào modal ----------
+  document.getElementById('resultQuizTitle').textContent = quiz.title || '';
+  document.getElementById('scorePercent').textContent = percent + '%';
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('incorrectCount').textContent = incorrect;
+  document.getElementById('unansweredCount').textContent = unanswered;
+  document.getElementById('tenScale').textContent = tenScale + ' / 10';
+  document.getElementById('timeTaken').textContent = `${m}:${s}`;
+
+  // ---------- Render review table ----------
+  const tbody = document.querySelector('#reviewTable tbody');
+  tbody.innerHTML = reviewData.map(r => {
+    const badgeClass = r.status === 'correct' ? 'correct'
+                    : r.status === 'incorrect' ? 'incorrect'
+                    : 'unanswered';
+    const badgeText = r.status === 'correct' ? '✅ Đúng'
+                   : r.status === 'incorrect' ? '❌ Sai'
+                   : '⚪ Trống';
+    const userClass = r.status === 'unanswered' ? 'user-answer empty' : 'user-answer';
+
+    return `
+      <tr>
+        <td class="q-num">${r.num}</td>
+        <td class="q-text">${App.escapeHtml(r.text)}</td>
+        <td class="${userClass}">${App.escapeHtml(r.userAnswer)}</td>
+        <td class="correct-answer">${App.escapeHtml(r.correctAnswer)}</td>
+        <td><span class="result-badge ${badgeClass}">${badgeText}</span></td>
+        <td class="explanation">${r.explanation ? App.escapeHtml(r.explanation) : '<span style="color:#cbd5e1">—</span>'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  // ---------- Hiện modal ----------
+  document.getElementById('resultModal').classList.add('show');
+}
+
+ 
 
   // ---------- Modal controls ----------
   document.getElementById('modalClose').onclick = () =>
