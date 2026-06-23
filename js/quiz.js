@@ -384,14 +384,14 @@ async function renderPage() {
     state.answers = {};
     renderAnswerSheet();
   };
-
- function showResults() {
+function showResults() {
   const questions = quiz.questions || [];
   let correct = 0, incorrect = 0, unanswered = 0;
   const reviewData = [];
 
   questions.forEach((q, i) => {
     const user = state.answers[i];
+    const type = q.type;   // 👈 DÒNG QUAN TRỌNG
     const hasAnswer = user !== undefined && user !== '' && user !== null &&
       (typeof user !== 'object' || Object.keys(user).length > 0);
 
@@ -444,7 +444,7 @@ async function renderPage() {
       fb.innerHTML = `⚪ Chưa trả lời. Đáp án: <strong>${App.escapeHtml(correctDisplay)}</strong>`;
     }
 
-    // Highlight options
+    // Highlight options (chỉ cho dạng có .option)
     if (type !== 'matching' || !Array.isArray(q.matchingOptions)) {
       block.querySelectorAll('.option').forEach(o => {
         const input = o.querySelector('input');
@@ -473,10 +473,9 @@ async function renderPage() {
   const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
   const s = String(elapsed % 60).padStart(2, '0');
 
-  // Lưu vào dashboard
   App.recordQuizResult(id, correct, total);
 
-  // ---------- Điền vào modal ----------
+  // ---------- Điền modal ----------
   document.getElementById('resultQuizTitle').textContent = quiz.title || '';
   document.getElementById('scorePercent').textContent = percent + '%';
   document.getElementById('totalCount').textContent = total;
@@ -509,7 +508,6 @@ async function renderPage() {
     `;
   }).join('');
 
-  // ---------- Hiện modal ----------
   document.getElementById('resultModal').classList.add('show');
 }
 
