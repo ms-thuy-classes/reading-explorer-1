@@ -10,11 +10,11 @@
   },
   {
     "id": "quiz-002",
-    "title": "TOEIC Practice Test 01",
-    "category": "TOEIC",
+    "title": "READING EXPLORER 3: High-tech Solutions",
+    "category": "IELTS",
     "thumbnail": "assets/img/toeic.jpg",
-    "questions": 4,
-    "duration": 45,
+    "questions": 27,
+    "duration": 70,
     "pdf": "pdf/test2.pdf"
   },
   {
