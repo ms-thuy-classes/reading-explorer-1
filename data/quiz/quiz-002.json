@@ -1,0 +1,268 @@
+
+{
+  "id": "quiz-001",
+  "title": "IELTS Reading Test 02",
+  "category": "IELTS",
+  "duration": 40,
+  "pdf": "pdf/test2.pdf",
+  "page": 1,
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "text": "What would be the best alternative title for this passage?",
+      "options": [
+        "A. How VR Brings Us All Together",
+        "B. The Future of VR Gaming",
+        "C. VR: A Useful Tool for the 21st Century",
+        "D. Saving the Planet with VR"
+      ],
+      "answer": "C. VR: A Useful Tool for the 21st Century"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "text": "Which of these is NOT an example of embodied cognition?",
+      "options": [
+        "A. watching a soccer game on TV",
+        "B. cooking a meal using a recipe",
+        "C. completing a crossword puzzle",
+        "D. playing a musical instrument"
+      ],
+      "answer": "A. watching a soccer game on TV"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "text": "What is the purpose of the Ischia VR model?",
+      "options": [
+        "A. to propose a new way of saving sea life near Ischia",
+        "B. to recreate what the climate in Italy was like in the past",
+        "C. to show how oceans are being damaged by climate change",
+        "D. to explain how pollution from Ischia is affecting other areas"
+      ],
+      "answer": "C. to show how oceans are being damaged by climate change"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "text": "Which of the following is closest in meaning to adopters in paragraph D?",
+      "options": [
+        "A. users",
+        "B. inventors",
+        "C. athletes",
+        "D. quarterbacks"
+      ],
+      "answer": "A. users"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "text": "What is Bailenson's main point in the final paragraph (K)?",
+      "options": [
+        "A. Although VR technology is improving, other media will still be important.",
+        "B. VR is a major change, but it will not fundamentally change who we are.",
+        "C. It will take several years before people's lives are really affected by VR.",
+        "D. VR's impact is significant, but many people in the world will not notice it."
+      ],
+      "answer": "B. VR is a major change, but it will not fundamentally change who we are."
+    },
+    {
+      "id": 6,
+      "type": "short_answer",
+      "text": "According to Bailenson, how do people learn best?",
+      "answer": [
+        "by doing",
+        "embodied cognition"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "short_answer",
+      "text": "In what other way did VR help American football players, in addition to improving decision-making?",
+      "answer": [
+        "reducing reaction times"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "short_answer",
+      "text": "In what other way can VR avatars improve video conferencing, in addition to body posture and space?",
+      "answer": [
+        "eye contact"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "short_answer",
+      "text": "What does the Ischia VR model allow people to be?",
+      "answer": [
+        "scientists"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "short_answer",
+      "text": "How is VR similar to other types of media?",
+      "answer": [
+        "a tool",
+        "it's a tool",
+        "it is a tool"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "matching",
+      "text": "Advantages of using VR to help athletes",
+      "matchingOptions": [
+        "A. have clearer interactions with others",
+        "B. react to situations more quickly",
+        "C. visualize the impact on an environment over time",
+        "D. see a place they'd normally not be able to visit",
+        "E. avoid dangerous or life-threatening situations",
+        "F. practice the same action many times"
+      ],
+      "answer": [
+        "B. react to situations more quickly",
+        "F. practice the same action many times"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "matching",
+      "text": "Advantages of using VR to improve video conferencing",
+      "matchingOptions": [
+        "A. have clearer interactions with others",
+        "B. react to situations more quickly",
+        "C. visualize the impact on an environment over time",
+        "D. see a place they'd normally not be able to visit",
+        "E. avoid dangerous or life-threatening situations",
+        "F. practice the same action many times"
+      ],
+      "answer": "A. have clearer interactions with others"
+    },
+    {
+      "id": 13,
+      "type": "matching",
+      "text": "Advantages of using VR at the Ischia marine site",
+      "matchingOptions": [
+        "A. have clearer interactions with others",
+        "B. react to situations more quickly",
+        "C. visualize the impact on an environment over time",
+        "D. see a place they'd normally not be able to visit",
+        "E. avoid dangerous or life-threatening situations",
+        "F. practice the same action many times"
+      ],
+      "answer": [
+        "C. visualize the impact on an environment over time",
+        "D. see a place they'd normally not be able to visit"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "short_answer",
+      "text": "What does the interviewer suggest is one possible downside to VR?",
+      "answer": [
+        "creating violent video games",
+        "violent video games"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "fill_blank",
+      "text": "Virtual reality therapy (VRT) is a way to ______ patients who suffer from psychological trauma.",
+      "answer": "treat"
+    },
+    {
+      "id": 16,
+      "type": "fill_blank",
+      "text": "Instead of lying down and just talking to a therapist, VRT patients take a less ______ role.",
+      "answer": "passive"
+    },
+    {
+      "id": 17,
+      "type": "fill_blank",
+      "text": "In this way, patients ______ experience a virtual version that is similar to the traumatic event.",
+      "answer": "get to"
+    },
+    {
+      "id": 18,
+      "type": "fill_blank",
+      "text": "Patients experience a virtual version that is similar to the ______ traumatic event.",
+      "answer": "actual"
+    },
+    {
+      "id": 19,
+      "type": "fill_blank",
+      "text": "By ______ the event virtually, patients are able to reduce their anxiety.",
+      "answer": "going over"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "text": "The downside of something is the ______ aspect of it.",
+      "options": [
+        "A. positive",
+        "B. negative"
+      ],
+      "answer": "B. negative"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "text": "At a conference, you are more likely to speak to ______.",
+      "options": [
+        "A. colleagues",
+        "B. family members"
+      ],
+      "answer": "A. colleagues"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "text": "If you demonstrate a skill, you ______ it.",
+      "options": [
+        "A. show",
+        "B. hide"
+      ],
+      "answer": "A. show"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "text": "You use conversely to indicate an idea is ______ another idea.",
+      "options": [
+        "A. similar to",
+        "B. different from"
+      ],
+      "answer": "B. different from"
+    },
+    {
+      "id": 24,
+      "type": "fill_blank",
+      "text": "Places that don't get much rain can get flooded by a sudden ______.",
+      "answer": "downpour"
+    },
+    {
+      "id": 25,
+      "type": "fill_blank",
+      "text": "For some people, a ______ of living in the suburbs is the long drive to work.",
+      "answer": "downside"
+    },
+    {
+      "id": 26,
+      "type": "fill_blank",
+      "text": "An increase in interest rates can cause a ______ in the housing market.",
+      "answer": "downturn"
+    },
+    {
+      "id": 27,
+      "type": "fill_blank",
+      "text": "Once their children are grown up, some parents ______ to a smaller house.",
+      "answer": "downsize"
+    }
+  ]
+}
+ 
+  
+
